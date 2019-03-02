@@ -10,6 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 // import { InMemoryDataService } from './in-memory-data.service';
 import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { MatButtonModule, MatCheckboxModule, MatCardModule} from '@angular/material';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,8 @@ import { MatButtonModule, MatCheckboxModule, MatCardModule} from '@angular/mater
     MatButtonModule,
     MatCheckboxModule,
     MatCardModule,
+    FormsModule,
+    ReactiveFormsModule,
 
   ],
   providers: [],

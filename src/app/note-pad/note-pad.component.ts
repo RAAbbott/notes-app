@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {Note} from '../notes-tray/notes-tray.models';
+import {NotesTrayHttpService} from '../notes-tray/notes-tray.http.service';
+import { FormControl } from '@angular/forms';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-note-pad',
@@ -6,14 +11,48 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./note-pad.component.css']
 })
 export class NotePadComponent implements OnInit {
+  noteId = 1;
+  currentNote: Note;
 
-  constructor() { }
+  // Form Control Variable
+  notesBody = new FormControl('');
+
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private notesTrayHttpService: NotesTrayHttpService,
+  ) { }
 
   ngOnInit() {
+    this.activatedRoute.params.subscribe(val => {
+      this.noteId = val.noteId;
+      this.getNoteFromNoteID();
+    });
+    this.setFormControlToCurrentNote();
+    this.formControlSubscription();
   }
 
-  saveNote() {
+  setFormControlToCurrentNote() {
+    this.notesBody.setValue(this.currentNote.body);
   }
 
+  formControlSubscription() {
+    this.notesBody.valueChanges.pipe(debounceTime(1000)).subscribe((newBody) => {
+      console.log(newBody);
+      this.currentNote.body = newBody;
+      console.log(localStorage);
+      localStorage.setItem(this.currentNote.title, JSON.stringify(this.currentNote));
+    });
+  }
+
+  getNoteFromNoteID() {
+     this.notesTrayHttpService.notes.forEach((note) => {
+       if (note.id === +this.noteId) {
+         this.currentNote = note;
+         this.notesBody.setValue(this.currentNote.body);
+       }
+     });
+     console.log('yeet', this.currentNote);
+
+  }
 
 }
