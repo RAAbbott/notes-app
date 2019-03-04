@@ -1,6 +1,6 @@
+import { NoteClass } from './../notes-tray/notes-tray.models';
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {Note} from '../notes-tray/notes-tray.models';
 import {NotesTrayHttpService} from '../notes-tray/notes-tray.http.service';
 import { FormControl } from '@angular/forms';
 import { debounceTime } from 'rxjs/operators';
@@ -12,7 +12,7 @@ import { debounceTime } from 'rxjs/operators';
 })
 export class NotePadComponent implements OnInit {
   noteId = 1;
-  currentNote: Note;
+  currentNote: NoteClass;
 
   // Form Control Variable
   notesBody = new FormControl('');
@@ -40,7 +40,7 @@ export class NotePadComponent implements OnInit {
       console.log(newBody);
       this.currentNote.body = newBody;
       console.log(localStorage);
-      localStorage.setItem(this.currentNote.title, JSON.stringify(this.currentNote));
+      localStorage.setItem(`${this.currentNote.id}`, JSON.stringify(this.currentNote));
     });
   }
 

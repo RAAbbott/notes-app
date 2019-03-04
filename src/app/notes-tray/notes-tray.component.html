@@ -7,7 +7,10 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-12 text-center">
-        <a (click)="addNote()" class="new-note">Add New Note</a>
+        <a href="addNote()" class="new-note">
+          <i class="material-icons add">add_circle_outline</i>
+          Add New Note
+        </a>
     </div>
   </div>
   <div class="row">
@@ -16,6 +19,9 @@
         <mat-card (click)="goToNote(note.id)">
           <mat-card-title style="font-size:15px;">{{note.title}}</mat-card-title>
           <mat-card-content style="font-size:10px;">{{note.bodyPreview}}</mat-card-content>
+          <mat-card-footer>
+            <a href="deleteNote()"><i class="material-icons delete">delete_outline</i></a>
+          </mat-card-footer>
         </mat-card>
       </span>
     </div>

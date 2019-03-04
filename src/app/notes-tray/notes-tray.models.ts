@@ -8,19 +8,20 @@ export interface Note {
   recording?: any;
 }
 
-export class Note {
+export class NoteClass {
   title: string;
-  id?: number;
+  id: number;
   body: string;
   bodyPreview: string;
   createDate: string;
   lastModified?: string;
   recording?: any;
-  constructor(title = 'Default', id = 0, body = 'Default', bodyPreview = 'Default', createDate = 'Default') {
-    this.title = title;
+  constructor(id = 1, title = 'Title', body = 'Notes Body', bodyPreview = 'Preview', createDate = 'Date') {
+    console.log(id, title, body);
     this.id = id;
+    this.title = title;
     this.body = body;
-    this.bodyPreview = this.bodyPreview;
+    this.bodyPreview = bodyPreview;
     this.createDate = createDate;
   }
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {Note} from './notes-tray.models';
+import {NoteClass} from './notes-tray.models';
 import {ActivatedRoute, Router} from "@angular/router";
 import {NotesTrayHttpService} from "./notes-tray.http.service";
 
@@ -9,19 +9,24 @@ import {NotesTrayHttpService} from "./notes-tray.http.service";
   styleUrls: ['./notes-tray.component.css']
 })
 export class NotesTrayComponent implements OnInit {
-  notes: Note[];
+  notes: NoteClass[];
 
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private notesTrayHttpService: NotesTrayHttpService,
-  ) {}
+  ) {
+    this.notesTrayHttpService.init();
+  }
 
 
   ngOnInit() {
     this.notes = this.notesTrayHttpService.notes;
+    console.log(this.notes);
+
     console.log('NotesTray hit');
-    console.log(this.router);
+    console.log(localStorage.length);
+    console.log('localStorage: ', localStorage);
   }
 
   goToNote(noteId) {
@@ -30,6 +35,15 @@ export class NotesTrayComponent implements OnInit {
 
   addNote() {
     const numNotes = this.notes.length;
+    const newNote = new NoteClass(numNotes + 1);
+    this.notes.push(newNote);
+    localStorage.setItem(`${newNote.id}`, JSON.stringify(newNote));
+  }
+
+  deleteNote(id) {
+    console.log('deleting with id:', id);
+    localStorage.removeItem(id);
+    console.log(localStorage);
   }
 
 }

@@ -7,6 +7,7 @@ mat-card {
   background-color: #1e272e;
   color: white;
   border: 1px solid black;
+  border-radius: 10px;
 }
 .dark {
   background-color: #0a0a0a;
@@ -20,4 +21,19 @@ mat-card {
 
 .new-note {
   color: white!important;
+  text-decoration: none;
+}
+
+.add {
+  color: white;
+  position: relative;
+  top: 5px;
+}
+
+.delete {
+  float: right;
+  position: relative;
+  bottom: 15px;
+  text-decoration: none;
+  color: white;
 }
