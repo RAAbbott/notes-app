@@ -6,16 +6,16 @@ import {NotePadComponent} from './note-pad/note-pad.component';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'notes',
-    pathMatch: 'full',
-  },
-  {
-    path: 'notes',
     redirectTo: 'notes/1',
+    pathMatch: 'full',
   },
   {
     path: 'notes/:noteId',
     component: NotePadComponent,
+  },
+  {
+    path: '**',
+    redirectTo: 'notes/1',
   }
 ];
 

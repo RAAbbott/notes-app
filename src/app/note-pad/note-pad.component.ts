@@ -14,7 +14,8 @@ export class NotePadComponent implements OnInit {
   noteId = 1;
   currentNote: NoteClass;
 
-  // Form Control Variable
+  // Form Control Variables
+  notesTitle = new FormControl('');
   notesBody = new FormControl('');
 
   constructor(
@@ -32,6 +33,7 @@ export class NotePadComponent implements OnInit {
   }
 
   setFormControlToCurrentNote() {
+    this.notesTitle.setValue(this.currentNote.title);
     this.notesBody.setValue(this.currentNote.body);
   }
 
@@ -39,6 +41,13 @@ export class NotePadComponent implements OnInit {
     this.notesBody.valueChanges.pipe(debounceTime(1000)).subscribe((newBody) => {
       console.log(newBody);
       this.currentNote.body = newBody;
+      this.currentNote.bodyPreview = newBody.split('').splice(0, 12).join('') + '...';
+      console.log(localStorage);
+      localStorage.setItem(`${this.currentNote.id}`, JSON.stringify(this.currentNote));
+    });
+    this.notesTitle.valueChanges.pipe(debounceTime(1000)).subscribe((newTitle) => {
+      console.log(newTitle);
+      this.currentNote.title = newTitle;
       console.log(localStorage);
       localStorage.setItem(`${this.currentNote.id}`, JSON.stringify(this.currentNote));
     });

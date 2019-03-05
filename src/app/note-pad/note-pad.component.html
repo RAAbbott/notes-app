@@ -2,7 +2,7 @@
 <div class="container-fluid space">
   <div class="row">
     <div class="col-sm-12">
-      <input class="notes-title" value="{{currentNote.title}}">
+      <input class="notes-title" [formControl]="notesTitle" value="{{currentNote.title}}">
       <!--<button class="center" (click)="saveNote()">Save</button>-->
     </div>
   </div>
