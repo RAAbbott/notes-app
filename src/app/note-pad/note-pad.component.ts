@@ -1,9 +1,11 @@
-import { NoteClass } from './../notes-tray/notes-tray.models';
+import { NotesDataService } from './../shared/notes-data.service';
+import { NoteClass, Note } from '../app.models';
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {NotesTrayHttpService} from '../notes-tray/notes-tray.http.service';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormBuilder } from '@angular/forms';
 import { debounceTime } from 'rxjs/operators';
+import { fbind } from 'q';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-note-pad',
@@ -11,23 +13,25 @@ import { debounceTime } from 'rxjs/operators';
   styleUrls: ['./note-pad.component.css']
 })
 export class NotePadComponent implements OnInit {
-  noteId = 1;
-  currentNote: NoteClass;
+  currentNote$: Observable<Note>;
+  currentNote: Note;
 
   // Form Control Variables
-  notesTitle = new FormControl('');
-  notesBody = new FormControl('');
+  noteFormGroup = this.fb.group({
+    notesTitle: [''],
+    notesBody: [''],
+  });
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private notesTrayHttpService: NotesTrayHttpService,
-  ) { }
+    private data: NotesDataService,
+    private fb: FormBuilder,
+  ) {
+    this.currentNote$ = this.data.currentNote.asObservable();
+   }
 
   ngOnInit() {
-    this.activatedRoute.params.subscribe(val => {
-      this.noteId = val.noteId;
-      this.getNoteFromNoteID();
-    });
+    this.currentNote$.subscribe((val) => this.currentNote = val);
     this.setFormControlToCurrentNote();
     this.formControlSubscription();
   }
@@ -38,30 +42,31 @@ export class NotePadComponent implements OnInit {
   }
 
   formControlSubscription() {
-    this.notesBody.valueChanges.pipe(debounceTime(1000)).subscribe((newBody) => {
-      console.log(newBody);
-      this.currentNote.body = newBody;
-      this.currentNote.bodyPreview = newBody.split('').splice(0, 12).join('') + '...';
-      console.log(localStorage);
-      localStorage.setItem(`${this.currentNote.id}`, JSON.stringify(this.currentNote));
-    });
-    this.notesTitle.valueChanges.pipe(debounceTime(1000)).subscribe((newTitle) => {
-      console.log(newTitle);
-      this.currentNote.title = newTitle;
-      console.log(localStorage);
+    this.noteFormGroup.valueChanges.pipe(debounceTime(1000)).subscribe((newNote) => {
+      console.log(newNote);
+      this.data.currentNote.next(newNote);
+      // this.data.currentNote.bodyPreview = newBody.split('').splice(0, 12).join('') + '...';
       localStorage.setItem(`${this.currentNote.id}`, JSON.stringify(this.currentNote));
     });
   }
 
-  getNoteFromNoteID() {
-     this.notesTrayHttpService.notes.forEach((note) => {
-       if (note.id === +this.noteId) {
-         this.currentNote = note;
-         this.notesBody.setValue(this.currentNote.body);
-       }
-     });
-     console.log('yeet', this.currentNote);
+  // getNoteFromNoteID() {
+  //    this.data.notes.forEach((note) => {
+  //      if (note.id === +this.noteId) {
+  //        this.currentNote = note;
+  //        this.notesBody.setValue(this.currentNote.body);
+  //      }
+  //    });
+  //    console.log('yeet', this.currentNote);
 
+  // }
+
+  get notesTitle() {
+    return this.noteFormGroup.get('notesTitle') as FormControl;
+  }
+
+  get notesBody() {
+    return this.noteFormGroup.get('notesBody') as FormControl;
   }
 
 }

@@ -15,8 +15,8 @@
   </div>
   <div class="row">
     <div class="notes-tray col-12">
-      <span *ngFor="let note of notes">
-        <mat-card (click)="goToNote(note.id)">
+      <span *ngFor="let note of notes$ | async">
+        <mat-card (click)="setCurrentNote(note)">
           <mat-card-title style="font-size:15px;">{{note.title}}</mat-card-title>
           <mat-card-content style="font-size:10px;">{{note.bodyPreview}}</mat-card-content>
           <mat-card-footer>

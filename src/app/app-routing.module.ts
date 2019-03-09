@@ -1,21 +1,20 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import {NotesTrayComponent} from './notes-tray/notes-tray.component';
 import {NotePadComponent} from './note-pad/note-pad.component';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'notes/1',
+    redirectTo: 'notes',
     pathMatch: 'full',
   },
   {
-    path: 'notes/:noteId',
+    path: 'notes',
     component: NotePadComponent,
   },
   {
     path: '**',
-    redirectTo: 'notes/1',
+    redirectTo: 'notes',
   }
 ];
 

@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import {NoteClass} from './notes-tray.models';
-import {ActivatedRoute, Router} from "@angular/router";
-import {NotesTrayHttpService} from "./notes-tray.http.service";
+import { NoteClass } from '../app.models';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NotesDataService } from '../shared/notes-data.service';
 import { routerNgProbeToken } from '@angular/router/src/router_module';
+import { Observable } from 'rxjs';
+import { Note } from '../app.models';
 
 @Component({
   selector: 'app-notes-tray',
@@ -10,28 +12,22 @@ import { routerNgProbeToken } from '@angular/router/src/router_module';
   styleUrls: ['./notes-tray.component.css']
 })
 export class NotesTrayComponent implements OnInit {
-  notes: NoteClass[];
+  notes$: Observable<NoteClass[]>;
+  notes: Note[];
 
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private notesTrayHttpService: NotesTrayHttpService,
+    private notesDataService: NotesDataService,
   ) {
-    this.notesTrayHttpService.init();
+    this.notesDataService.init();
+    this.notes$ = this.notesDataService.notesList.asObservable();
   }
-
 
   ngOnInit() {
-    this.notes = this.notesTrayHttpService.notes;
-    console.log(this.notes);
-
-    console.log('NotesTray hit');
-    console.log(localStorage.length);
-    console.log('localStorage: ', localStorage);
-  }
-
-  goToNote(noteId) {
-    this.router.navigate([`notes/${noteId}`]);
+    this.notes$.subscribe((val) => {
+      this.notes = val;
+    });
   }
 
   addNote() {
@@ -42,14 +38,22 @@ export class NotesTrayComponent implements OnInit {
     localStorage.setItem(`${newNote.id}`, JSON.stringify(newNote));
   }
 
-  deleteNote(id) {
-    console.log('deleting with id:', id);
-    localStorage.removeItem(id);
-    this.notes.splice(id - 1, 1);
-    if (this.activatedRoute.snapshot.paramMap.get('noteId') === `${id - 1}`) {
-      this.router.navigate(['notes/1']);
-    }
-    console.log(localStorage);
+  setCurrentNote(note: Note) {
+    this.notesDataService.currentNote.next(note);
+    console.log('current Note = ', note);
   }
 
+  deleteNote(id) {
+    console.log('route param: ', this.activatedRoute.snapshot.params);
+    if (confirm('Are you sure you want to delete this note?')) {
+      localStorage.removeItem(id);
+      const newNotes = this.notes.splice(id - 1, 1);
+      this.notesDataService.notesList.next(newNotes);
+      if (this.activatedRoute.snapshot.paramMap.get('noteId') === `${id}`) {
+        this.router.navigateByUrl('notes/1', { skipLocationChange: true });
+      }
+    } else {
+      return;
+    }
+  }
 }
