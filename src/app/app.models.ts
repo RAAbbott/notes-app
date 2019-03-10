@@ -1,3 +1,6 @@
+import * as moment from 'moment';
+
+
 export interface Note {
   title: string;
   id: number;
@@ -8,18 +11,17 @@ export interface Note {
   recording?: any;
 }
 
-export class NoteClass {
+export class NoteConstructor implements Note {
+  constructor(id: number, title: string, body: string) {
+    this.id = id;
+    this.title = title;
+    this.body = body;
+    this.bodyPreview = body.split('').splice(0, 12).join('') + '...';
+    this.createDate = moment().format('MMMM-DD-YYYY');
+  }
   title: string;
   id: number;
   body: string;
   bodyPreview: string;
   createDate: string;
-  constructor(id = 1, title = 'Title', body = 'Notes Body', bodyPreview = 'Preview', createDate = 'Date') {
-    console.log(id, title, body);
-    this.id = id;
-    this.title = title;
-    this.body = body;
-    this.bodyPreview = bodyPreview;
-    this.createDate = createDate;
-  }
 }

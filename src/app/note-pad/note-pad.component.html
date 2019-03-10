@@ -1,15 +1,21 @@
 
 <div class="container-fluid space">
-  <div class="row">
-    <div class="col-sm-12">
-      <input class="notes-title" [formControl]="notesTitle" value="{{currentNote.title}}">
-      <!--<button class="center" (click)="saveNote()">Save</button>-->
+  <ng-container *ngIf="zeroNotes">
+    <div class="zeroNotes">
+      Click "Add New Note" To Get Started
     </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-12">
-      <textarea class="notes-body" [formControl]="notesBody">{{currentNote.body}}</textarea>
-      <!--<button class="center" (click)="saveNote()">Save</button>-->
+  </ng-container>
+  <ng-container  *ngIf="!zeroNotes">
+    <div class="row">
+      <div class="col-sm-12">
+        <input class="notes-title" [formControl]="notesTitle" value="{{currentNote.title}}">
+        <!--<button class="center" (click)="saveNote()">Save</button>-->
+      </div>
     </div>
-  </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <textarea class="notes-body" [formControl]="notesBody">{{currentNote.body}}</textarea>
+      </div>
+    </div>
+  </ng-container>
 </div>

@@ -1,5 +1,5 @@
 import { NotesDataService } from './../shared/notes-data.service';
-import { NoteClass, Note } from '../app.models';
+import { Note } from '../app.models';
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import { FormControl, FormBuilder } from '@angular/forms';
@@ -22,8 +22,10 @@ export class NotePadComponent implements OnInit {
     notesBody: [''],
   });
 
+  // Other variables
+  zeroNotes = false;
+
   constructor(
-    private activatedRoute: ActivatedRoute,
     private data: NotesDataService,
     private fb: FormBuilder,
   ) {
@@ -31,9 +33,19 @@ export class NotePadComponent implements OnInit {
    }
 
   ngOnInit() {
-    this.currentNote$.subscribe((val) => this.currentNote = val);
+    this.subscribeToCurrentNote();
     this.setFormControlToCurrentNote();
     this.formControlSubscription();
+  }
+
+  subscribeToCurrentNote() {
+    this.currentNote$.subscribe((val) => {
+      if (val != null) {
+        this.currentNote = val;
+      } else {
+        this.zeroNotes = true;
+      }
+    });
   }
 
   setFormControlToCurrentNote() {
@@ -43,23 +55,13 @@ export class NotePadComponent implements OnInit {
 
   formControlSubscription() {
     this.noteFormGroup.valueChanges.pipe(debounceTime(1000)).subscribe((newNote) => {
+      console.log('change detected');
       console.log(newNote);
       this.data.currentNote.next(newNote);
       // this.data.currentNote.bodyPreview = newBody.split('').splice(0, 12).join('') + '...';
       localStorage.setItem(`${this.currentNote.id}`, JSON.stringify(this.currentNote));
     });
   }
-
-  // getNoteFromNoteID() {
-  //    this.data.notes.forEach((note) => {
-  //      if (note.id === +this.noteId) {
-  //        this.currentNote = note;
-  //        this.notesBody.setValue(this.currentNote.body);
-  //      }
-  //    });
-  //    console.log('yeet', this.currentNote);
-
-  // }
 
   get notesTitle() {
     return this.noteFormGroup.get('notesTitle') as FormControl;
