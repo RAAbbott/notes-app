@@ -13,6 +13,7 @@
   border: .5px solid black;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
+  font-family: 'Thasadith', sans-serif;
 }
 
 .notes-textarea {
@@ -36,6 +37,7 @@
   border: .5px solid black;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
+  font-family: 'Thasadith', sans-serif;
 }
 
 .space {
@@ -44,4 +46,17 @@
 
 .zeroNotes {
   color: #666;
+}
+
+.saveIndicator {
+  font-size: 13px;
+  color: #eee;
+  font-family: 'Thasadith', sans-serif;
+}
+
+.checkmark {
+  font-size: 15px;
+  color: white;
+  position: relative;
+  top: 3px;
 }

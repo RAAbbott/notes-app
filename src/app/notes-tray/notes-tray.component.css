@@ -8,6 +8,7 @@ mat-card {
   color: white;
   border: 1px solid black;
   border-radius: 10px;
+  font-family: 'Thasadith', sans-serif;
 }
 .dark {
   background-color: #0a0a0a;
@@ -22,6 +23,17 @@ mat-card {
 .new-note {
   color: white!important;
   text-decoration: none;
+  font-family: 'Thasadith', sans-serif;
+}
+
+h1 {
+  font-family: 'Thasadith', sans-serif;
+  font-weight: 700;
+  color: rgb(30,30,30);
+}
+
+.big {
+  font-size: 200px;
 }
 
 .add {
@@ -40,4 +52,12 @@ mat-card {
 
 a:hover {
   cursor: pointer
+}
+
+.add-note {
+  margin-bottom: 30px;
+}
+
+.notepad {
+  margin-top: 30px;
 }

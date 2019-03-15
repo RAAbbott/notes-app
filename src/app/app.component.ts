@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'simple-songwriter-app';
-  header = 'Simple Songwriter...';
+  header = 'SimplyNote';
 
   clearLocalStorage() {
     localStorage.clear();

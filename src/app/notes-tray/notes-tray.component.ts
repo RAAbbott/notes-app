@@ -13,12 +13,16 @@ import { Note } from '../app.models';
 })
 export class NotesTrayComponent implements OnInit {
   notes$: Observable<Note[]>;
+  currentNote$: Observable<Note>;
   notes: Note[];
+
+  zeroNotes: boolean;
 
   constructor(
     private notesDataService: NotesDataService
   ) {
     this.notes$ = this.notesDataService.notesList.asObservable();
+    this.currentNote$ = this.notesDataService.currentNote.asObservable();
     this.notesDataService.initiateNoteListAndCurrentNote();
   }
 
@@ -27,23 +31,39 @@ export class NotesTrayComponent implements OnInit {
     console.log('notes list on startup: ', this.notes);
   }
 
+  defaultNote() {
+    return new NoteConstructor(1, 'My First Note', 'This is my first note!');
+  }
+
   subscribeToNotesList() {
     this.notes$.subscribe(val => {
-      this.notes = val;
+      if (val.length === 0) {
+        this.zeroNotes = true;
+      } else {
+        this.notes = val;
+        this.zeroNotes = false;
+      }
     });
   }
 
   // This method creates a new note and adds it to the local notes list, updates the behavior subject, and adds note to localStorage
   addNote() {
-    const numNotes = this.notes.length;
-    const newNote = new NoteConstructor(
-      numNotes + 1,
-      'Title',
-      'Body',
-    );
-    this.notes.push(newNote);
-    this.notesDataService.updateList(this.notes);
-    localStorage.setItem(`${newNote.id}`, JSON.stringify(newNote));
+    if (this.zeroNotes) {
+      const defaultNote = this.defaultNote();
+      localStorage.setItem(`${defaultNote.id}`, JSON.stringify(defaultNote));
+      this.notesDataService.updateList([defaultNote], 'add');
+      this.zeroNotes = false;
+    } else {
+      const numNotes = this.notes.length;
+      const newNote = new NoteConstructor(
+        numNotes + 1,
+        'Default Title',
+        'Default Text',
+      );
+      this.notes.push(newNote);
+      this.notesDataService.updateList(this.notes, 'add');
+      localStorage.setItem(`${newNote.id}`, JSON.stringify(newNote));
+    }
   }
 
   // Updates the currentNote behavior subject, which lets note-pad component know which note to display
@@ -57,8 +77,9 @@ export class NotesTrayComponent implements OnInit {
   deleteNote(id) {
     if (confirm('Are you sure you want to delete this note?')) {
       localStorage.removeItem(id);
-      this.notes.splice(id - 1, 1);
-      this.notesDataService.updateList(this.notes);
+      const noteToRemove = this.notes.filter(note => note.id === id);
+      this.notes.splice(this.notes.indexOf(noteToRemove[0]), 1);
+      this.notesDataService.updateList(this.notes, 'delete');
     } else {
       return;
     }

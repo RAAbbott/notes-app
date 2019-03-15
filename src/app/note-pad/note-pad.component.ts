@@ -1,11 +1,11 @@
 import { NotesDataService } from './../shared/notes-data.service';
 import { Note } from '../app.models';
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { FormControl, FormBuilder } from '@angular/forms';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, tap } from 'rxjs/operators';
 import { fbind } from 'q';
-import { Observable } from 'rxjs';
+import { Observable, pipe } from 'rxjs';
 
 @Component({
   selector: 'app-note-pad',
@@ -19,48 +19,71 @@ export class NotePadComponent implements OnInit {
   // Form Control Variables
   noteFormGroup = this.fb.group({
     notesTitle: [''],
-    notesBody: [''],
+    notesBody: ['']
   });
 
   // Other variables
-  zeroNotes = false;
+  saveIndicator = 'Saved';
+  isSaving = false;
 
-  constructor(
-    private data: NotesDataService,
-    private fb: FormBuilder,
-  ) {
-    this.currentNote$ = this.data.currentNote.asObservable();
-   }
+  constructor(private notesDataService: NotesDataService, private fb: FormBuilder) {
+    this.currentNote$ = this.notesDataService.currentNote.asObservable();
+  }
 
   ngOnInit() {
     this.subscribeToCurrentNote();
     this.setFormControlToCurrentNote();
-    this.formControlSubscription();
+    this.formControlSaveOnChange();
   }
 
   subscribeToCurrentNote() {
-    this.currentNote$.subscribe((val) => {
+    this.currentNote$.subscribe(val => {
       if (val != null) {
         this.currentNote = val;
+        this.setFormControlToCurrentNote();
       } else {
-        this.zeroNotes = true;
+        this.notesDataService.updateList([], 'emptyNotes');
       }
     });
   }
 
   setFormControlToCurrentNote() {
-    this.notesTitle.setValue(this.currentNote.title);
-    this.notesBody.setValue(this.currentNote.body);
+    this.notesTitle.setValue(this.currentNote.title, { emitEvent: false });
+    this.notesBody.setValue(this.currentNote.body, { emitEvent: false });
   }
 
-  formControlSubscription() {
-    this.noteFormGroup.valueChanges.pipe(debounceTime(1000)).subscribe((newNote) => {
-      console.log('change detected');
-      console.log(newNote);
-      this.data.currentNote.next(newNote);
-      // this.data.currentNote.bodyPreview = newBody.split('').splice(0, 12).join('') + '...';
-      localStorage.setItem(`${this.currentNote.id}`, JSON.stringify(this.currentNote));
-    });
+  formControlSaveOnChange() {
+    this.noteFormGroup.valueChanges
+      .pipe(
+        tap(val => {
+          this.isSaving = true;
+          this.saveIndicator = 'Typing...';
+        }),
+        debounceTime(1000)
+      )
+      .subscribe(val => {
+        console.log(val);
+        this.currentNote.title = val.notesTitle;
+        this.currentNote.body = val.notesBody;
+        this.currentNote.titlePreview =
+          val.notesTitle
+            .split('')
+            .splice(0, 12)
+            .join('') + '...';
+        this.currentNote.bodyPreview =
+          val.notesBody
+            .split('')
+            .splice(0, 12)
+            .join('') + '...';
+        console.log('updated Note: ', this.currentNote);
+        this.notesDataService.updateCurrentNote(this.currentNote);
+        localStorage.setItem(
+          `${this.currentNote.id}`,
+          JSON.stringify(this.currentNote)
+        );
+        this.saveIndicator = 'Saved';
+        this.isSaving = false;
+      });
   }
 
   get notesTitle() {
@@ -70,5 +93,4 @@ export class NotePadComponent implements OnInit {
   get notesBody() {
     return this.noteFormGroup.get('notesBody') as FormControl;
   }
-
 }

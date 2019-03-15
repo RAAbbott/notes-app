@@ -2,7 +2,7 @@
 <div class="container-fluid space">
   <ng-container *ngIf="zeroNotes">
     <div class="zeroNotes">
-      Click "Add New Note" To Get Started
+      <h1>Click "Add New Note" To Get Started</h1>
     </div>
   </ng-container>
   <ng-container  *ngIf="!zeroNotes">
@@ -15,6 +15,12 @@
     <div class="row">
       <div class="col-sm-12">
         <textarea class="notes-body" [formControl]="notesBody">{{currentNote.body}}</textarea>
+      </div>
+    </div>
+    <div class="row saveIndicator">
+      <div class="col-sm-2">
+        <i *ngIf="!isSaving" class="material-icons checkmark">check</i>
+        {{saveIndicator}}
       </div>
     </div>
   </ng-container>

@@ -18,15 +18,11 @@ export class NotesDataService implements OnInit {
   ngOnInit() {
   }
 
-  defaultNote = () => new NoteConstructor(1, 'Title', 'Body');
-
   initiateNoteListAndCurrentNote() {
     if (localStorage.length === 0) {
-      const defaultNote = this.defaultNote();
-      localStorage.setItem(`${defaultNote.id}`, JSON.stringify(defaultNote));
-      this.notesList.next([defaultNote]);
-      this.currentNote.next(defaultNote);
+      this.zeroNotes = true;
     } else {
+      this.zeroNotes = false;
       const allNotes = [];
       const noteIds = Object.keys(localStorage);
       console.log(noteIds);
@@ -41,11 +37,31 @@ export class NotesDataService implements OnInit {
     console.log(this.currentNote.value);
   }
 
-  updateList(data: Note[]) {
+  updateList(data: Note[], action: string) {
     this.notesList.next(data);
-    this.currentNote.next(this.notesList.value[0]);
-    console.log('currentNote: ', this.currentNote.value);
-    console.log('notesList: ', this.notesList.value);
+    if (action === 'add') {
+      console.log('note added to list has this value: ', this.notesList.value[this.notesList.value.length - 1]);
+      this.currentNote.next(this.notesList.value[this.notesList.value.length - 1]);
+      console.log(this.currentNote);
+    } else if (action === 'delete') {
+      this.currentNote.next(this.notesList.value[0]);
+    } else if (action === 'emptyNotes') {
+      return;
+    }
+  }
+
+  updateCurrentNote(note: Note) {
+    this.currentNote.next(note);
+    const noteVal = this.currentNote.value;
+    const listVal = this.notesList.value;
+    const newNotesList = [].concat(listVal);
+    for (let i = 0; i < listVal.length; i++) {
+      if (newNotesList[i].id === noteVal.id) {
+        newNotesList[i] = noteVal;
+      }
+    }
+    console.log('new notes list: ', newNotesList);
+    this.notesList.next(newNotesList);
   }
 
 }
