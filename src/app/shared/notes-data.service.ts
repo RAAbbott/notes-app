@@ -20,9 +20,9 @@ export class NotesDataService implements OnInit {
 
   initiateNoteListAndCurrentNote() {
     if (localStorage.length === 0) {
-      this.zeroNotes = true;
+      // this.zeroNotes = true;
     } else {
-      this.zeroNotes = false;
+      // this.zeroNotes = false;
       const allNotes = [];
       const noteIds = Object.keys(localStorage);
       console.log(noteIds);
