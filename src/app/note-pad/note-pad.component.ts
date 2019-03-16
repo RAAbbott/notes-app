@@ -62,7 +62,6 @@ export class NotePadComponent implements OnInit {
         debounceTime(1000)
       )
       .subscribe(val => {
-        console.log(val);
         this.currentNote.title = val.notesTitle;
         this.currentNote.body = val.notesBody;
         this.currentNote.titlePreview =
@@ -75,7 +74,6 @@ export class NotePadComponent implements OnInit {
             .split('')
             .splice(0, 12)
             .join('') + '...';
-        console.log('updated Note: ', this.currentNote);
         this.notesDataService.updateCurrentNote(this.currentNote);
         localStorage.setItem(
           `${this.currentNote.id}`,

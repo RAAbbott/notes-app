@@ -32,7 +32,7 @@ export class NotesTrayComponent implements OnInit {
   }
 
   defaultNote() {
-    return new NoteConstructor(1, 'My First Note', 'This is my first note!');
+    return new NoteConstructor(1, 'My First Note', 'This is my first note! Changes are automatically saved after typing!');
   }
 
   subscribeToNotesList() {
@@ -79,6 +79,16 @@ export class NotesTrayComponent implements OnInit {
       localStorage.removeItem(id);
       const noteToRemove = this.notes.filter(note => note.id === id);
       this.notes.splice(this.notes.indexOf(noteToRemove[0]), 1);
+      this.notesDataService.updateList(this.notes, 'delete');
+    } else {
+      return;
+    }
+  }
+
+  deleteAllNotes() {
+    if (confirm('Are you sure you want to delete ALL notes? This cannot be undone...')) {
+      localStorage.clear();
+      this.notes = [];
       this.notesDataService.updateList(this.notes, 'delete');
     } else {
       return;

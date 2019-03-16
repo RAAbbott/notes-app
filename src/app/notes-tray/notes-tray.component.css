@@ -36,7 +36,7 @@ h1 {
   font-size: 200px;
 }
 
-.add {
+.add-icon {
   color: white;
   position: relative;
   top: 5px;
@@ -54,10 +54,22 @@ a:hover {
   cursor: pointer
 }
 
-.add-note {
+.buttons {
   margin-bottom: 30px;
 }
 
 .notepad {
   margin-top: 30px;
+}
+
+.delete-all-notes {
+  color: white!important;
+  text-decoration: none;
+  font-family: 'Thasadith', sans-serif;
+}
+
+.delete-all-icon {
+  color: rgba(255, 0, 0, 0.705);
+  position: relative;
+  top: 5px;
 }

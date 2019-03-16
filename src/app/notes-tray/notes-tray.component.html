@@ -1,10 +1,18 @@
 <div class="container-fluid">
-  <div class="row add-note">
-    <div class="col-12 text-center">
+  <div class="row buttons">
+    <div class="col-sm-4"></div>
+    <div class="col-sm-4 text-center">
         <a (click)="addNote()" class="new-note">
-          <i class="material-icons add">add_circle_outline</i>
+          <i class="material-icons add-icon">add_circle_outline</i>
           Add New Note
         </a>
+    </div>
+    <div class="col-sm-1"></div>
+    <div class="col-sm-3">
+      <a (click)="deleteAllNotes()" class="delete-all-notes" *ngIf="!zeroNotes">
+        <i class="material-icons delete-all-icon">delete_outline</i>
+        Delete All
+      </a>
     </div>
   </div>
   <div class="container-fluid" *ngIf="zeroNotes">
@@ -17,7 +25,7 @@
     </div>
   </div>
   <div class="row" *ngIf="!zeroNotes">
-    <div class="notes-tray col-12">
+    <div class="notes-tray col-sm-12">
       <span *ngFor="let note of notes$ | async">
         <mat-card class="card" (click)="setCurrentNote(note)">
           <mat-card-title style="font-size:15px;">{{note.titlePreview}}</mat-card-title>
@@ -32,7 +40,7 @@
 </div>
 <div class="container-fluid notepad" *ngIf="!zeroNotes">
   <div class="row">
-    <div class="col-12">
+    <div class="col-sm-12">
       <router-outlet></router-outlet>
     </div>
   </div>
