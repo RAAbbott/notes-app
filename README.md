@@ -1,27 +1,9 @@
 # SimplyNote
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.2.1.
+As a singer-songwriter, I haven't found a notes/writing app that gives me the functionality and simplicity that I want without being
+bloated with non-essential features. This app is the first version in my idea of a notes app that is centered around singer-songwriters. 
+There are more functionalities I want to add in that will simplify the songwriting process. This was built using Angular7 and uses local 
+storage to automatically save your notes as you type. Let me know what you think!
 
-## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+Live site can be found here: https://raabbott.github.io/notes-app/#/notes
